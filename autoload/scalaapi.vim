@@ -1,7 +1,7 @@
 function! scalaapi#complete(findstart, base)
   if a:findstart
     let line = getline('.')
-    let cur = col('.') - 1
+    let start = col('.') - 1
     while start > 0 && line[start - 1] =~ '\a'
       let start -= 1
     endwhile
