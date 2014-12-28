@@ -1,5 +1,5 @@
-let [ s:KIND_RESERVED, s:KIND_PACKAGE, s:KIND_CLASS, s:KIND_TRAIT ] = range(4)
-let [ s:MODE_RESERVED, s:MODE_PACKAGE, s:MODE_TYPE, s:MODE_TYPE_CLASS, s:MODE_TYPE_TRAIT ] = range(5)
+let [ s:KIND_RESERVED, s:KIND_PACKAGE, s:KIND_CLASS, s:KIND_TRAIT s:KIND_OBJECT ] = range(5)
+let [ s:MODE_RESERVED, s:MODE_PACKAGE, s:MODE_TYPE, s:MODE_TYPE_CLASS, s:MODE_TYPE_TRAIT s:MODE_OBJECT ] = range(6)
 
 let s:complete_mode = s:MODE_RESERVED
 let s:complete_kind = ''
@@ -97,29 +97,17 @@ function! s:obj_completion(base, res, objects)
 endfunction
 
 function! s:obj_compitem(obj)
-  let abbr = a:obj.name . " (" . a:obj.root . ")"
+  let abbr = a:obj.kind . " " . a:obj.name . " (" . a:obj.root . ")"
   return {
     \ 'word' : a:obj.name,
     \ 'abbr' : abbr,
-    \ 'kind' : a:obj.kind,
+    \ 'kind' : '',
     \ 'menu' : a:obj.inherit,
     \}
 endfunction
 " --- complete functions }}
 
 " --- load functions {{
-let s:package = []
-function! scalaapi#package(name, root, kind, inherit, members)
-  call add(s:package,
-    \ {
-    \ 'name'       : a:name,
-    \ 'root'       : a:root,
-    \ 'kind'       : a:kind,
-    \ 'inherit'    : a:inherit,
-    \ 'ckind'      : s:KIND_PACKAGE
-    \ })
-endfunction
-
 let s:reserved = []
 function! scalaapi#reserved(name, root, kind, inherit, members)
   call add(s:reserved,
@@ -129,6 +117,18 @@ function! scalaapi#reserved(name, root, kind, inherit, members)
     \ 'kind'       : a:kind,
     \ 'inherit'    : a:inherit,
     \ 'ckind'      : s:KIND_RESERVED
+    \ })
+endfunction
+
+let s:package = []
+function! scalaapi#package(name, root, kind, inherit, members)
+  call add(s:package,
+    \ {
+    \ 'name'       : a:name,
+    \ 'root'       : a:root,
+    \ 'kind'       : a:kind,
+    \ 'inherit'    : a:inherit,
+    \ 'ckind'      : s:KIND_PACKAGE
     \ })
 endfunction
 
@@ -153,6 +153,18 @@ function! scalaapi#class(name, root, kind, inherit, members)
     \ 'kind'       : a:kind,
     \ 'inherit'    : a:inherit,
     \ 'ckind'      : s:KIND_CLASS
+    \ })
+endfunction
+
+let s:object = []
+function! scalaapi#object(name, root, kind, inherit, members)
+  call add(s:object,
+    \ {
+    \ 'name'       : a:name,
+    \ 'root'       : a:root,
+    \ 'kind'       : a:kind,
+    \ 'inherit'    : a:inherit,
+    \ 'ckind'      : s:KIND_OBJECT
     \ })
 endfunction
 
