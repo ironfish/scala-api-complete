@@ -1,1 +1,1 @@
-call scalaapi#package('scala.reflect',   'scala',  '   [p]', '', [])
+call scalaapi#package('scala.reflect',   'scala',  '[p]', '', [])

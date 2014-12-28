@@ -1,1 +1,1 @@
-call scalaapi#package('scala.util.matching',   'util',  '   [p]', '', [])
+call scalaapi#package('scala.util.matching',   'util',  '[p]', '', [])

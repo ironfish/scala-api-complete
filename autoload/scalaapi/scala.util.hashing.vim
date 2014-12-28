@@ -1,1 +1,1 @@
-call scalaapi#package('scala.util.hashing',   'util',  '   [p]', '', [])
+call scalaapi#package('scala.util.hashing',   'util',  '[p]', '', [])

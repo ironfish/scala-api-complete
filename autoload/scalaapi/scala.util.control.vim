@@ -1,1 +1,1 @@
-call scalaapi#package('scala.util.control',   'util',  '   [p]', '', [])
+call scalaapi#package('scala.util.control',   'util',  '[p]', '', [])

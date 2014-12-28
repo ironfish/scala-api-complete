@@ -1,1 +1,1 @@
-call scalaapi#package('scala.collection.script',   'collection',  '   [p]', '', [])
+call scalaapi#package('scala.collection.script',   'collection',  '[p]', '', [])

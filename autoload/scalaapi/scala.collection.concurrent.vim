@@ -1,1 +1,1 @@
-call scalaapi#package('scala.collection.concurrent',   'collection',  '   [p]', '', [])
+call scalaapi#package('scala.collection.concurrent',   'collection',  '[p]', '', [])

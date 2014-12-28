@@ -1,1 +1,1 @@
-call scalaapi#package('scala.util',   'scala',  '   [p]', '', [])
+call scalaapi#package('scala.util',   'scala',  '[p]', '', [])

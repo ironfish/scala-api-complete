@@ -1,1 +1,1 @@
-call scalaapi#package('scala.ref',   'scala',  '   [p]', '', [])
+call scalaapi#package('scala.ref',   'scala',  '[p]', '', [])

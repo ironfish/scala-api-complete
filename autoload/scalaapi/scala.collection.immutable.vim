@@ -1,1 +1,1 @@
-call scalaapi#package('scala.collection.immutable',   'collection',  '   [p]', '', [])
+call scalaapi#package('scala.collection.immutable',   'collection',  '[p]', '', [])

@@ -1,1 +1,1 @@
-call scalaapi#package('scala.annotation.meta',   'annotation',  '   [p]', '', [])
+call scalaapi#package('scala.annotation.meta',   'annotation',  '[p]', '', [])

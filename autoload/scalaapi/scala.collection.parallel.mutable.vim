@@ -1,1 +1,1 @@
-call scalaapi#package('scala.collection.parallel.mutable',   'parallel',  '   [p]', '', [])
+call scalaapi#package('scala.collection.parallel.mutable',   'parallel',  '[p]', '', [])
