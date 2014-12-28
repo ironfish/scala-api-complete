@@ -195,5 +195,11 @@ function s:sortfiles(i1, i2)
   let new_i2 = substitute(a:i2, '.vim$', '', '')
   return new_i1 == new_i2 ? 0 : new_i1 > new_i2 ? 1 : -1
 endfunction
-" --- load functions }}
+
+" load
+if !exists('s:loaded')
+  call scalaapi#load()
+  let s:loaded = 1
+endif 
+"--- load functions }}
 
