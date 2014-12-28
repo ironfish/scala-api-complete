@@ -1,1 +1,1 @@
-call scalaapi#package('scala.collection.convert')
+call scalaapi#package('scala.collection.convert',   'collection',  '   [p]', '', [])

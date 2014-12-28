@@ -1,1 +1,1 @@
-call scalaapi#package('scala.annotation.unchecked')
+call scalaapi#package('scala.annotation.unchecked',   'annotation',  '   [p]', '', [])

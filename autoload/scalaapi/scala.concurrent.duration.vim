@@ -1,1 +1,1 @@
-call scalaapi#package('scala.concurrent.duration')
+call scalaapi#package('scala.concurrent.duration',   'concurrent',  '   [p]', '', [])

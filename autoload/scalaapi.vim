@@ -1,20 +1,20 @@
-let [ s:TYPE_RESERVED, s:TYPE_PACKAGE, s:TYPE_CLASS, s:TYPE_TRAIT ] = range(4)
-let [ s:MODE_RESERVED, s:MODE_PACKAGE, s:MODE_CLASS, s:MODE_TRAIT ] = range(4)
+let [ s:KIND_RESERVED, s:KIND_PACKAGE, s:KIND_CLASS, s:KIND_TRAIT ] = range(4)
+let [ s:MODE_RESERVED, s:MODE_PACKAGE, s:MODE_TYPE, s:MODE_TYPE_CLASS, s:MODE_TYPE_TRAIT ] = range(5)
 
 let s:complete_mode = s:MODE_RESERVED
-let s:type = ''
+let s:complete_kind = ''
 let s:parts = []
 
 function! s:analize(line, cur)
-  let line = getline('.')
+  let line = getline(a:line)
   let cur = a:cur
 
-  " package mode
+  " MODE_PACKAGE
   if line[0:10] =~ '\<import\>\s'
     let start = matchend(line, '\<import\>\s\+')
     let exists = 0
     for pkg in s:package
-      if pkg =~ '^' . line[ start : ]
+      if pkg.name =~ '^' . line[ start : ]
         let exists = 1
         break
       endif
@@ -25,54 +25,69 @@ function! s:analize(line, cur)
   endif
 
   let start = cur
-  while start > 0 && line[start - 1] !~ '[ \t]'
+  while start > 0 && line[start - 1] !~ '[ \t[;]'
     let start -= 1
   endwhile
-"  while idx > 0 && line[idx] !~ '[. \t(;]'
-"    let idx -= 1
-"  endwhile
-"  while start > 0 && line[start - 1] =~ '\a'
-"    let start -= 1
-"  endwhile
 
-  " class mode
+  " MODE_TYPE
+  " enforces strict style ( extends class | trait)
   if start >= 8 && line[ start - 8 : ] =~ '\<extends\>'
-"    let idx -= 3
-"    while idx > 0 && line[idx] =~ '[ \t=]'
-"      let idx -= 1
-"    endwhile
-    echo line[ start - 7 : ]
-    return [ start, s:MODE_CLASS, '', [] ]
+    return [ start, s:MODE_TYPE, '', [] ]
   endif
 
-  echo line[ start - 7 : ]
-  " reserved mode
+  " MODE_TYPE_TRAIT
+  " enforces strict style ( with trait)
+  if start >= 5 && line[ start - 5 : ] =~ '\<with\>'
+    return [ start, s:MODE_TYPE_TRAIT, '', [] ]
+  endif
+
+  " MODE_TYPE
+  " enforces strict style (variable: type)
+  if start > 3 && line[ start - 3 : ] =~ '\a\:'
+    return [ start, s:MODE_TYPE, '', [] ]
+  endif
+
+  " MODE_TYPE
+  " enforces strict style (type <: | >: | <% type)
+  if start > 4 && line[ start - 4 : ] =~ '\ \(\(<\:\)\|\(>\:\)\|\(<%\)\)'
+    return [ start, s:MODE_TYPE, '', [] ]
+  endif
+
+  echo "cur:" . cur . " start:" . start . " line:" . line[ start - 4 : ]
+
+  " MODE_TYPE
+  " enforces strict style ([type)
+  if cur > 0 && line[cur - 1] == '['
+    return [ cur, s:MODE_TYPE, '', [] ]
+  endif
+
+  " MODE_RESERVED
   return [ start, s:MODE_RESERVED, '', [] ]
 endfunction
 
 function! scalaapi#complete(findstart, base)
   if a:findstart
-    let line = getline('.')
+    let line = line('.')
     let start = col('.') - 1
-    let [ sstart, s:complete_mode, s:type, s:parts ] = s:analize(line, start)
+    let [ sstart, s:complete_mode, s:complete_kind, s:parts ] = s:analize(line, start)
     return sstart
   else
     let res = []
     if s:complete_mode == s:MODE_RESERVED
-      call s:reserved_completion(a:base, res)
+      call s:obj_completion(a:base, res, s:reserved)
     elseif s:complete_mode == s:MODE_PACKAGE
-      call s:package_completion(a:base, res)
-    elseif s:complete_mode == s:MODE_CLASS
+      call s:obj_completion(a:base, res, s:package)
+    elseif s:complete_mode == s:MODE_TYPE
       call s:obj_completion(a:base, res, s:class)
       call s:obj_completion(a:base, res, s:trait)
- "     call s:class_completion(a:base, res)
- "     call s:trait_completion(a:base, res)
+    elseif s:complete_mode == s:MODE_TYPE_TRAIT
+      call s:obj_completion(a:base, res, s:trait)
     endif
     return res
   endif
 endfunction
 
-
+" --- complete functions
 function! s:obj_completion(base, res, objects)
   for obj in a:objects
     if obj.name =~ '^' . a:base
@@ -82,109 +97,64 @@ function! s:obj_completion(base, res, objects)
 endfunction
 
 function! s:obj_compitem(obj)
-  let abbr = a:obj.typ . " " . a:obj.name . " (" . a:obj.package . ")"
+  let abbr = a:obj.name . " (" . a:obj.root . ")"
   return {
     \ 'word' : a:obj.name,
     \ 'abbr' : abbr,
-    \ 'menu' : a:obj.inhereted,
-    \ 'kind' : 't',
+    \ 'kind' : a:obj.kind,
+    \ 'menu' : a:obj.inherit,
     \}
 endfunction
+" --- complete functions }}
 
-" --- reserved word functions {{
-function! s:reserved_completion(base, res)
-  for rsv in s:reserved
-    if rsv.name =~ '^' . a:base
-      call add(a:res, s:reserved_to_completion(rsv))
-    endif
-  endfor
-endfunction
-
-function! s:reserved_to_completion(rsv)
-  return {
-    \ 'word' : a:rsv.name,
-    \ 'menu' : a:rsv.detail,
-    \ 'kind' : 'R',
-    \}
+" --- load functions {{
+let s:package = []
+function! scalaapi#package(name, root, kind, inherit, members)
+  call add(s:package,
+    \ {
+    \ 'name'       : a:name,
+    \ 'root'       : a:root,
+    \ 'kind'       : a:kind,
+    \ 'inherit'    : a:inherit,
+    \ 'ckind'      : s:KIND_PACKAGE
+    \ })
 endfunction
 
 let s:reserved = []
-function! scalaapi#reserved(name, detail)
+function! scalaapi#reserved(name, root, kind, inherit, members)
   call add(s:reserved,
     \ {
-    \ 'type'       : s:TYPE_RESERVED,
     \ 'name'       : a:name,
-    \ 'detail'     : a:detail
+    \ 'root'       : a:root,
+    \ 'kind'       : a:kind,
+    \ 'inherit'    : a:inherit,
+    \ 'ckind'      : s:KIND_RESERVED
     \ })
 endfunction
-" --- reserved word functions }}
 
-" --- package functions {{
-function! s:package_completion(base, res)
-  for pkg in s:package
-    if pkg =~ '^' . a:base
-      call add(a:res, s:package_to_completion(pkg))
-    endif
-  endfor
-endfunction
-
-function! s:package_to_completion(pkg)
-  return {
-    \ 'word' : a:pkg,
-    \ 'menu' : 'package',
-    \ 'kind' : 't',
-    \}
-endfunction
-
-let s:package = []
-let s:package_tmp = []
-function! scalaapi#package(pkg)
-  call add(s:package_tmp, a:pkg)
-"  let parts = split(a:pkg, '\.')
-"  for part in parts
-"    call s:package_item(part, '', [])
-"  endfor
-endfunction
-
-"let s:class = {}
-"function! s:package_item(name, extend, members)
-"  let s:class[ a:name ] = {
-"    \ 'type'   : s:TYPE_PACKAGE,
-"    \ 'name'   : a:name,
-"    \ 'kind'   : 't',
-"    \ 'extend' : a:extend,
-"    \ 'members': a:members,
-"    \}
-"endfunction
-" --- package functions }}
-
-" --- trait functions {{
 let s:trait = []
-function! scalaapi#trait(name, package, typ, inhereted, members)
+function! scalaapi#trait(name, root, kind, inherit, members)
   call add(s:trait,
     \ {
-    \ 'type'       : s:TYPE_TRAIT,
     \ 'name'       : a:name,
-    \ 'package'    : a:package,
-    \ 'typ'        : a:typ,
-    \ 'inhereted'  : a:inhereted
+    \ 'root'       : a:root,
+    \ 'kind'       : a:kind,
+    \ 'inherit'    : a:inherit,
+    \ 'ckind'      : s:KIND_TRAIT
     \ })
 endfunction
-" ___ trait functions }}
 
-" --- class functions {{
 let s:class = []
-function! scalaapi#class(name, package, typ, inhereted, members)
+function! scalaapi#class(name, root, kind, inherit, members)
   call add(s:class,
     \ {
-    \ 'type'       : s:TYPE_CLASS,
     \ 'name'       : a:name,
-    \ 'package'    : a:package,
-    \ 'typ'        : a:typ,
-    \ 'inhereted'  : a:inhereted
+    \ 'root'       : a:root,
+    \ 'kind'       : a:kind,
+    \ 'inherit'    : a:inherit,
+    \ 'ckind'      : s:KIND_CLASS
     \ })
 endfunction
-" --- class functions }}
 
 function! s:msg(msg)
   redraw
@@ -195,6 +165,7 @@ endfunction
 function! scalaapi#load()
   let rtp = split(&runtimepath, ',')
   let files = split(globpath(join(rtp, ','), 'autoload/scalaapi/*.vim'), '\n')
+  let files = sort(files, "s:sortfiles")
   for file in files
     if file
       continue
@@ -203,6 +174,13 @@ function! scalaapi#load()
     exe 'so ' . file
   endfor
   echo '[scala-complete] loaded!'
-  let s:package = sort(s:package_tmp)
 endfunction
+
+" sort the files based on name w/o the .vim ending.
+function s:sortfiles(i1, i2)
+  let new_i1 = substitute(a:i1, '.vim$', '', '')
+  let new_i2 = substitute(a:i2, '.vim$', '', '')
+  return new_i1 == new_i2 ? 0 : new_i1 > new_i2 ? 1 : -1
+endfunction
+" --- load functions }}
 

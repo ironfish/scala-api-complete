@@ -1,1 +1,1 @@
-call scalaapi#package('scala.runtime')
+call scalaapi#package('scala.runtime',   'scala',  '   [p]', '', [])

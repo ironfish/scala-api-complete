@@ -1,1 +1,1 @@
-call scalaapi#package('scala.collection.mutable')
+call scalaapi#package('scala.collection.mutable',   'collection',  '   [p]', '', [])

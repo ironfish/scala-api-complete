@@ -1,1 +1,1 @@
-call scalaapi#package('scala.sys')
+call scalaapi#package('scala.sys',   'scala',  '   [p]', '', [])

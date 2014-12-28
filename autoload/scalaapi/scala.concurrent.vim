@@ -1,1 +1,1 @@
-call scalaapi#package('scala.concurrent')
+call scalaapi#package('scala.concurrent',   'scala',  '   [p]', '', [])

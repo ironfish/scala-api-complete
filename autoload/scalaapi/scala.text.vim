@@ -1,1 +1,1 @@
-call scalaapi#package('scala.text')
+call scalaapi#package('scala.text',   'scala',  '   [p]', '', [])

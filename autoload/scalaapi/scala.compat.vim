@@ -1,1 +1,1 @@
-call scalaapi#package('scala.compat')
+call scalaapi#package('scala.compat',   'scala',  '   [p]', '', [])
