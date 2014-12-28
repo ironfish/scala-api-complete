@@ -103,6 +103,7 @@ function! s:obj_compitem(obj)
     \ 'abbr' : abbr,
     \ 'kind' : '',
     \ 'menu' : a:obj.inherit,
+    \ 'dup'  : 1,
     \}
 endfunction
 " --- complete functions }}
