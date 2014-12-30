@@ -98,12 +98,22 @@ function! s:obj_completion(base, res, objects)
 endfunction
 
 function! s:obj_compitem(obj)
-  let abbr = a:obj.kind . " " . a:obj.name . " (" . a:obj.root . ")"
+  let abbr = a:obj.kind . " " . a:obj.name
+  if strlen(a:obj.inherit) > 0
+    let abbr = abbr . " " . a:obj.inherit
+  endif
+  if strlen(abbr) > 40
+    let abbr = strpart(abbr, 0, 40) . "..."
+  endif
+  let root = ''
+  if strlen(a:obj.root) > 0
+    let root = "(" . a:obj.root . ")"
+  endif
   return {
     \ 'word' : a:obj.name,
     \ 'abbr' : abbr,
     \ 'kind' : '',
-    \ 'menu' : '',
+    \ 'menu' : root,
     \ 'dup'  : 1,
     \}
 endfunction
