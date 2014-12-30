@@ -1,1 +1,5 @@
-call scalaapi#package('scala.collection.concurrent',   'collection',  '[p]', '', [])
+call scalaapi#package('scala.collection.concurrent', '', '[p]', [], [])
+call scalaapi#trait('Map', 'scala.collection.concurrent', '[t]', ['mutable.Map'], [])
+call scalaapi#class('TrieMap.MangledHashing', 'scala.collection.concurrent', '[c]', ['Hashing'], [])
+call scalaapi#object('TrieMap', 'scala.collection.concurrent', '[o]', ['MutableMapFactory', 'TrieMap', 'Serializable'], [])
+call scalaapi#class('TrieMap', 'scala.collection.concurrent', '[c]', ['Map', 'mutable.MapLike', 'TrieMap', 'CustomParallelizable', 'ParTrieMap', 'Serializable'], [])

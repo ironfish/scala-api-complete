@@ -79,6 +79,7 @@ function! scalaapi#complete(findstart, base)
       call s:obj_completion(a:base, res, s:package)
     elseif s:complete_mode == s:MODE_TYPE
       call s:obj_completion(a:base, res, s:class)
+      call s:obj_completion(a:base, res, s:object)
       call s:obj_completion(a:base, res, s:trait)
     elseif s:complete_mode == s:MODE_TYPE_TRAIT
       call s:obj_completion(a:base, res, s:trait)
@@ -102,7 +103,7 @@ function! s:obj_compitem(obj)
     \ 'word' : a:obj.name,
     \ 'abbr' : abbr,
     \ 'kind' : '',
-    \ 'menu' : a:obj.inherit,
+    \ 'menu' : '',
     \ 'dup'  : 1,
     \}
 endfunction

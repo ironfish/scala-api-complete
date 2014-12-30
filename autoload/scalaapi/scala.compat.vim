@@ -1,1 +1,2 @@
-call scalaapi#package('scala.compat',   'scala',  '[p]', '', [])
+call scalaapi#package('scala.compat', '', '[p]', [], [])
+call scalaapi#object('Platform', 'scala.compat', '[o]', [], [])
