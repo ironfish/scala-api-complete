@@ -123,66 +123,26 @@ endfunction
 let s:reserved = []
 function! scalaapi#reserved(name, root, kind, tparms, members)
   call s:scalaapi_loadstruct(s:reserved, a:name, a:root, a:kind, a:tparms, a:members, s:KIND_RESERVED)
-"  call add(s:reserved,
-"    \ {
-"    \ 'name'       : a:name,
-"    \ 'root'       : a:root,
-"    \ 'kind'       : a:kind,
-"    \ 'tparms'     : a:tparms,
-"    \ 'ckind'      : s:KIND_RESERVED
-"    \ })
 endfunction
 
 let s:package = []
 function! scalaapi#package(name, root, kind, tparms, members)
   call s:scalaapi_loadstruct(s:package, a:name, a:root, a:kind, a:tparms, a:members, s:KIND_PACKAGE)
-"  call add(s:package,
-"    \ {
-"    \ 'name'       : a:name,
-"    \ 'root'       : a:root,
-"    \ 'kind'       : a:kind,
-"    \ 'tparms'     : a:tparms,
-"    \ 'ckind'      : s:KIND_PACKAGE
-"    \ })
 endfunction
 
 let s:trait = []
 function! scalaapi#trait(name, root, kind, tparms, members)
   call s:scalaapi_loadstruct(s:trait, a:name, a:root, a:kind, a:tparms, a:members, s:KIND_TRAIT)
-"  call add(s:trait,
-"    \ {
-"    \ 'name'       : a:name,
-"    \ 'root'       : a:root,
-"    \ 'kind'       : a:kind,
-"    \ 'tparms'     : a:tparms,
-"    \ 'ckind'      : s:KIND_TRAIT
-"    \ })
 endfunction
 
 let s:class = []
 function! scalaapi#class(name, root, kind, tparms, members)
   call s:scalaapi_loadstruct(s:class, a:name, a:root, a:kind, a:tparms, a:members, s:KIND_CLASS)
-"  call add(s:class,
-"    \ {
-"    \ 'name'       : a:name,
-"    \ 'root'       : a:root,
-"    \ 'kind'       : a:kind,
-"    \ 'tparms'     : a:tparms,
-"    \ 'ckind'      : s:KIND_CLASS
-"    \ })
 endfunction
 
 let s:object = []
 function! scalaapi#object(name, root, kind, tparms, members)
   call s:scalaapi_loadstruct(s:object, a:name, a:root, a:kind, a:tparms, a:members, s:KIND_OBJECT)
-"  call add(s:object,
-"    \ {
-"    \ 'name'       : a:name,
-"    \ 'root'       : a:root,
-"    \ 'kind'       : a:kind,
-"    \ 'tparms'     : a:tparms,
-"    \ 'ckind'      : s:KIND_OBJECT
-"   \ })
 endfunction
 
 function! s:scalaapi_loadstruct(struct, name, root, kind, tparms, members, ckind)
