@@ -23,6 +23,8 @@ for curdir, subdirs, files in walk(startdir):
     packagefile.write(cmdpkg.format(package, '', '') + "\n")
     for f in files:
         name = f.replace('$$', '.').replace('$', '').replace('.html', '')
+        name = name.replace('eqcoloneq', '=:=')
+        name = name.replace('lesscolonless', '<:<')
         fo = open(join(curdir,f), 'r')
         ft = fo.read()
         fo.close()
