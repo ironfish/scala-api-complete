@@ -102,8 +102,8 @@ function! s:obj_compitem(obj)
   if strlen(a:obj.inherit) > 0
     let abbr = abbr . " " . a:obj.inherit
   endif
-  if strlen(abbr) > 40
-    let abbr = strpart(abbr, 0, 60) . "..."
+  if strlen(abbr) > 70
+    let abbr = strpart(abbr, 0, 70) . "..."
   endif
   let root = ''
   if strlen(a:obj.root) > 0
