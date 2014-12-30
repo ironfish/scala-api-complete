@@ -122,61 +122,77 @@ endfunction
 " --- load functions {{
 let s:reserved = []
 function! scalaapi#reserved(name, root, kind, tparms, members)
-  call add(s:reserved,
-    \ {
-    \ 'name'       : a:name,
-    \ 'root'       : a:root,
-    \ 'kind'       : a:kind,
-    \ 'tparms'     : a:tparms,
-    \ 'ckind'      : s:KIND_RESERVED
-    \ })
+  s:scalaapi_loadstruct(s:reserved, name, root, kind, tparms, members, s:KIND_RESERVED)
+"  call add(s:reserved,
+"    \ {
+"    \ 'name'       : a:name,
+"    \ 'root'       : a:root,
+"    \ 'kind'       : a:kind,
+"    \ 'tparms'     : a:tparms,
+"    \ 'ckind'      : s:KIND_RESERVED
+"    \ })
 endfunction
 
 let s:package = []
 function! scalaapi#package(name, root, kind, tparms, members)
-  call add(s:package,
-    \ {
-    \ 'name'       : a:name,
-    \ 'root'       : a:root,
-    \ 'kind'       : a:kind,
-    \ 'tparms'     : a:tparms,
-    \ 'ckind'      : s:KIND_PACKAGE
-    \ })
+  s:scalaapi_loadstruct(s:package, name, root, kind, tparms, members, s:KIND_PACKAGE)
+"  call add(s:package,
+"    \ {
+"    \ 'name'       : a:name,
+"    \ 'root'       : a:root,
+"    \ 'kind'       : a:kind,
+"    \ 'tparms'     : a:tparms,
+"    \ 'ckind'      : s:KIND_PACKAGE
+"    \ })
 endfunction
 
 let s:trait = []
 function! scalaapi#trait(name, root, kind, tparms, members)
-  call add(s:trait,
-    \ {
-    \ 'name'       : a:name,
-    \ 'root'       : a:root,
-    \ 'kind'       : a:kind,
-    \ 'tparms'     : a:tparms,
-    \ 'ckind'      : s:KIND_TRAIT
-    \ })
+  s:scalaapi_loadstruct(s:trait, name, root, kind, tparms, members, s:KIND_TRAIT)
+"  call add(s:trait,
+"    \ {
+"    \ 'name'       : a:name,
+"    \ 'root'       : a:root,
+"    \ 'kind'       : a:kind,
+"    \ 'tparms'     : a:tparms,
+"    \ 'ckind'      : s:KIND_TRAIT
+"    \ })
 endfunction
 
 let s:class = []
 function! scalaapi#class(name, root, kind, tparms, members)
-  call add(s:class,
-    \ {
-    \ 'name'       : a:name,
-    \ 'root'       : a:root,
-    \ 'kind'       : a:kind,
-    \ 'tparms'     : a:tparms,
-    \ 'ckind'      : s:KIND_CLASS
-    \ })
+  s:scalaapi_loadstruct(s:class, name, root, kind, tparms, members, s:KIND_CLASS)
+"  call add(s:class,
+"    \ {
+"    \ 'name'       : a:name,
+"    \ 'root'       : a:root,
+"    \ 'kind'       : a:kind,
+"    \ 'tparms'     : a:tparms,
+"    \ 'ckind'      : s:KIND_CLASS
+"    \ })
 endfunction
 
 let s:object = []
 function! scalaapi#object(name, root, kind, tparms, members)
-  call add(s:object,
+  s:scalaapi_loadstruct(s:object, name, root, kind, tparms, members, s:KIND_OBJECT)
+"  call add(s:object,
+"    \ {
+"    \ 'name'       : a:name,
+"    \ 'root'       : a:root,
+"    \ 'kind'       : a:kind,
+"    \ 'tparms'     : a:tparms,
+"    \ 'ckind'      : s:KIND_OBJECT
+"   \ })
+endfunction
+
+function! s:scalaapi_loadstruct(stuct, name, root, kind, tparms, members, ckind)
+  call add(struct,
     \ {
     \ 'name'       : a:name,
     \ 'root'       : a:root,
     \ 'kind'       : a:kind,
     \ 'tparms'     : a:tparms,
-    \ 'ckind'      : s:KIND_OBJECT
+    \ 'ckind'      : ckind
     \ })
 endfunction
 
