@@ -74,43 +74,43 @@ function! scalaapi#complete(findstart, base)
   else
     let res = []
     if s:complete_mode == s:MODE_RESERVED
-      call s:obj_completion(a:base, res, s:reserved)
+      call s:scala_completion(a:base, res, s:reserved)
     elseif s:complete_mode == s:MODE_PACKAGE
-      call s:obj_completion(a:base, res, s:package)
+      call s:scala_completion(a:base, res, s:package)
     elseif s:complete_mode == s:MODE_TYPE
-      call s:obj_completion(a:base, res, s:class)
-      call s:obj_completion(a:base, res, s:object)
-      call s:obj_completion(a:base, res, s:trait)
+      call s:scala_completion(a:base, res, s:class)
+      call s:scala_completion(a:base, res, s:object)
+      call s:scala_completion(a:base, res, s:trait)
     elseif s:complete_mode == s:MODE_TYPE_TRAIT
-      call s:obj_completion(a:base, res, s:trait)
+      call s:scala_completion(a:base, res, s:trait)
     endif
     return res
   endif
 endfunction
 
 " --- complete functions
-function! s:obj_completion(base, res, objects)
-  for obj in a:objects
-    if obj.name =~ '^' . a:base
-      call add(a:res, s:obj_compitem(obj))
+function! s:scala_completion(base, res, items)
+  for item in a:items
+    if item.name =~ '^' . a:base
+      call add(a:res, s:scala_compitem(item))
     endif
   endfor
 endfunction
 
-function! s:obj_compitem(obj)
-  let abbr = a:obj.kind . " " . a:obj.name
-  if strlen(a:obj.inherit) > 0
-    let abbr = abbr . " " . a:obj.inherit
+function! s:scala_compitem(item)
+  let abbr = a:item.kind . " " . a:item.name
+  if strlen(a:item.tparms) > 0
+    let abbr = abbr . " " . a:item.tparms
   endif
   if strlen(abbr) > 70
     let abbr = strpart(abbr, 0, 70) . "..."
   endif
   let root = ''
-  if strlen(a:obj.root) > 0
-    let root = "(" . a:obj.root . ")"
+  if strlen(a:item.root) > 0
+    let root = "(" . a:item.root . ")"
   endif
   return {
-    \ 'word' : a:obj.name,
+    \ 'word' : a:item.name,
     \ 'abbr' : abbr,
     \ 'kind' : '',
     \ 'menu' : root,
@@ -121,61 +121,61 @@ endfunction
 
 " --- load functions {{
 let s:reserved = []
-function! scalaapi#reserved(name, root, kind, inherit, members)
+function! scalaapi#reserved(name, root, kind, tparms, members)
   call add(s:reserved,
     \ {
     \ 'name'       : a:name,
     \ 'root'       : a:root,
     \ 'kind'       : a:kind,
-    \ 'inherit'    : a:inherit,
+    \ 'tparms'     : a:tparms,
     \ 'ckind'      : s:KIND_RESERVED
     \ })
 endfunction
 
 let s:package = []
-function! scalaapi#package(name, root, kind, inherit, members)
+function! scalaapi#package(name, root, kind, tparms, members)
   call add(s:package,
     \ {
     \ 'name'       : a:name,
     \ 'root'       : a:root,
     \ 'kind'       : a:kind,
-    \ 'inherit'    : a:inherit,
+    \ 'tparms'     : a:tparms,
     \ 'ckind'      : s:KIND_PACKAGE
     \ })
 endfunction
 
 let s:trait = []
-function! scalaapi#trait(name, root, kind, inherit, members)
+function! scalaapi#trait(name, root, kind, tparms, members)
   call add(s:trait,
     \ {
     \ 'name'       : a:name,
     \ 'root'       : a:root,
     \ 'kind'       : a:kind,
-    \ 'inherit'    : a:inherit,
+    \ 'tparms'     : a:tparms,
     \ 'ckind'      : s:KIND_TRAIT
     \ })
 endfunction
 
 let s:class = []
-function! scalaapi#class(name, root, kind, inherit, members)
+function! scalaapi#class(name, root, kind, tparms, members)
   call add(s:class,
     \ {
     \ 'name'       : a:name,
     \ 'root'       : a:root,
     \ 'kind'       : a:kind,
-    \ 'inherit'    : a:inherit,
+    \ 'tparms'     : a:tparms,
     \ 'ckind'      : s:KIND_CLASS
     \ })
 endfunction
 
 let s:object = []
-function! scalaapi#object(name, root, kind, inherit, members)
+function! scalaapi#object(name, root, kind, tparms, members)
   call add(s:object,
     \ {
     \ 'name'       : a:name,
     \ 'root'       : a:root,
     \ 'kind'       : a:kind,
-    \ 'inherit'    : a:inherit,
+    \ 'tparms'     : a:tparms,
     \ 'ckind'      : s:KIND_OBJECT
     \ })
 endfunction
