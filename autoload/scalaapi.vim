@@ -185,7 +185,7 @@ function! scalaapi#object(name, root, kind, tparms, members)
 "   \ })
 endfunction
 
-function! s:scalaapi_loadstruct(stuct, name, root, kind, tparms, members, ckind)
+function! s:scalaapi_loadstruct(struct, name, root, kind, tparms, members, ckind)
   call add(struct,
     \ {
     \ 'name'       : a:name,
